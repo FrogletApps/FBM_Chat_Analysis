@@ -1,0 +1,29 @@
+<!--Created by James Pearson 26/05/18, last updated 26/05/18-->
+
+<html>
+	<head>
+		<title>FBM Chat Analysis</title>
+		<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="icon" href="https://frogletapps.github.io/assets/favicon.ico" type="image/ico">
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<!--Import jQuery Library-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<div id="topbar">
+			<h1>FBM Chat Analysis</h1>
+        </div>
+        
+        <br>
+
+        <div id="name">
+		</div>
+		<table id="outputTable">
+			<tr>
+				<th onclick="sortTable(0);">Name</th>
+				<th onclick="sortTable(1);">Number of Messages</th>
+			</tr>
+		</table>
+        <script src="reader.js"></script>
+	</body>
+</html>
