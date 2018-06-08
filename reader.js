@@ -1,11 +1,11 @@
-//Created by James Pearson 26/05/18, last updated 26/05/18
+//Created by James Pearson 26/05/18, last updated 08/06/18
 
-//This file reads the json data and processes it
+//This file reads json data from Facebook Messenger
 
 //Change this variable to use a different file
-var filename = "nodata.json";
+var filename = "mini.json";
 //load the json data
-$.getJSON(filename, function (data) {
+$.getJSON(filename, function (data){
     //output the json data into the console
     //$.each(data, function (index, value) {
     //   console.log(value);
@@ -21,7 +21,7 @@ $.getJSON(filename, function (data) {
         output += "<tr>";
         name = data.participants[person];
         output += "<td class='name'>" + name + "</td>";
-        output += "<td>" + count + "</td>";
+        output += "<td>" + getCount(data, name) + "</td>";
         output += "</tr>";
         count++;
     }
@@ -47,8 +47,8 @@ $.getJSON(filename, function (data) {
 
 function getCount(data, name) {
     var count = 0;
-    for (var i = 0; i < data.length; i++) {
-        if (data[i].name == name) {
+    for(var i = 0; i < data.length; i++){
+        if(data[i].sender_name == name) {
             count++;
         }
     }
@@ -82,11 +82,11 @@ function sortTable(n){
 
             //Check if the cell contains a date or not
             if($(x).hasClass("name")){
-                console.log("true");
+                //console.log("true");
                 isName = true;
             }
             else{
-                console.log("false");
+                //console.log("false");
                 isName = false;
             }
 
@@ -110,20 +110,15 @@ function sortTable(n){
             else if(dir == "asc" && isName){
                 if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
                     shouldSwitch = true;
-                    //console.log(x.getAttribute("month") + " " + y.getAttribute("month"));
-                    //console.log("Case 3");
                     break;
                 }
             }
             else if(dir == "desc" && isName){
                 if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
                     shouldSwitch = true;
-                    //console.log(x.getAttribute("month") + " " + y.getAttribute("month"));
-                    //console.log("Case 4");
                     break;
                 }
             }
-            //console.log(dir + " " + isNum);
         }
 
         if(shouldSwitch){
@@ -132,7 +127,8 @@ function sortTable(n){
             switching = true;
             //Each time a switch is done, increase this count by 1:
             switchcount ++;
-        }else{
+        }
+        else{
             //If no switching has been done AND the direction is "asc", set the direction to "desc" and run the while loop again.
             if(switchcount == 0 && dir == "asc"){
                 dir = "desc";
