@@ -20,15 +20,16 @@
 		</div>
 		<br>
 
-        <div id="name">
+		<div id="filePicker">
+			<input type="file" id="input" onchange="handleFiles(this.files)">
 		</div>
 
-		<table id="outputTable">
-		</table>
+        <div id="name"></div>
+
+		<table id="outputTable"></table>
 		<br>
 
-		<div id="error">
-		</div>
+		<div id="error"></div>
 		<br>
 
 		<script src="reader.js"></script>

@@ -3,15 +3,14 @@
 //This file reads json data from Facebook Messenger
 
 //Change this variable to use a different file
-var filename = "testdata.json";
+var filename = "json/testdata.json";
 //load the json data
-$.getJSON(filename, function (data){
+$.getJSON(filename, function(data){
     //output the json data into the console
     //$.each(data, function (index, value) {
     //   console.log(value);
     //});
 
-    var title = "<h2>" + data.title + "</h2>";
     var output = "";
     var count = 0;
     var members = getMembers(data.messages, data.participants);
@@ -53,6 +52,14 @@ $.getJSON(filename, function (data){
     $('#instructions').empty();
     $('#error').append("<p>Couldn't find the file :c</p>");
 });
+
+$(document).ready(function(){
+    console.log("bleep");
+    $.get(".", function(data){
+        $("#fileNames").append(data);
+        console.log("bleep");
+    });
+})
 
 //This code counts the messages for a specific user
 //NOTE: This gets VERY slow if you enable the console.logs

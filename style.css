@@ -46,6 +46,13 @@ p {
     text-align: center;
 }
 
+#filePicker{
+    font-family: "Segoe UI", Roboto, Ubuntu, sans-serif;
+    text-align: center;
+    /*For some reason this isn't properly centred, but this fixes it*/
+    margin-left: 5%;
+}
+
 #name, #outputTable{
     font-family: "Segoe UI", Roboto, Ubuntu, sans-serif;
     text-align: center;
