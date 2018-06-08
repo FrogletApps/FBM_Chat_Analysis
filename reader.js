@@ -33,10 +33,9 @@ $.getJSON(filename, function (data){
         output += "</tr>";
         count++;
     }
-    output += "</table>";
 
     //Add the title of the chat
-    $('#name').append(title);
+    $('#name').append(getTitle(data.title, members));
 
     //Check to see if there actually is anything to output
     if(count != 0){
@@ -45,11 +44,13 @@ $.getJSON(filename, function (data){
     }
     else{
         //count == 0 so no messages
+        $('#instructions').empty();
         $('#error').append("<p>No messages found :c</p>");
     }
 
 //If reading the JSON fails then this code runs
 }).fail(function(d) {
+    $('#instructions').empty();
     $('#error').append("<p>Couldn't find the file :c</p>");
 });
 
@@ -84,9 +85,26 @@ function getMembers(messages, participants){
         }
     }
     if(members.includes("Facebook User")){
-        $('#error').append('<p>NOTE: "Facebook User" may be include the data of several people </p>');
+        $('#error').append('<p>Note: "Facebook User" may include several people\'s data</p>');
     }
     return members;
+}
+
+function getTitle(title, members){
+    var newTitle = "";
+    if(members.length > 2){
+        newTitle = "Group Chat: " + title;
+    }
+    else if(members.length == 2){
+        newTitle = members[0] + " & " + members[1];
+    }
+    else if(members.length == 1){
+        newTitle = members[0] + "on their own...";
+    }
+    else{
+        newTitle =  "???";
+    }
+    return "<h2>" + newTitle + "</h2>";
 }
 
 //Modified version of:

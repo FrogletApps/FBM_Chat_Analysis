@@ -1,8 +1,14 @@
 {
   "messages": [
     {
+      "sender_name": "Facebook User",
+      "timestamp": 1527277470,
+      "content": "Hmm, I think I might delete my account",
+      "type": "Generic"
+    },
+    {
       "sender_name": "Number Two",
-      "timestamp": 1527277460,
+      "timestamp": 1527277465,
       "content": "ARGH.",
       "type": "Generic"
     },
@@ -28,7 +34,7 @@
       ]
     }
   ],
-  "title": "Test Data",
+  "title": "Test Chat",
   "is_still_participant": true,
   "status": "Pending",
   "thread_type": "Regular",
