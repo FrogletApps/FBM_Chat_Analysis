@@ -4,3 +4,6 @@
 
 #testdata.json is an mockup of what the data could look like, so is ok
 !testdata.json
+
+#Ignore shortcut links to other folders
+*.lnk

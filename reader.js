@@ -14,14 +14,22 @@ $.getJSON(filename, function (data){
     var title = "<h2>" + data.title + "</h2>";
     var output = "";
     var count = 0;
+    var members = getMembers(data.messages, data.participants);
 
     output += "<tr><th onclick='sortTable(0);'>Name</th>";
     output += "<th onclick='sortTable(1);'>Number of Messages</th></tr>";
-    for (person in data.participants){
+    for(person in members){
         output += "<tr>";
-        name = data.participants[person];
-        output += "<td class='name'>" + name + "</td>";
-        output += "<td>" + getCount(data.messages, name) + "</td>";
+        name = members[person];
+        //Flag Facebook User as different to everyone else
+        if(name == "Facebook User"){
+            output += "<td id='FBU' class='name'>" + name + "</td>";
+            output += "<td id='FBU'>" + getCount(data.messages, name) + "</td>";
+        }
+        else{
+            output += "<td class='name'>" + name + "</td>";
+            output += "<td>" + getCount(data.messages, name) + "</td>";
+        }
         output += "</tr>";
         count++;
     }
@@ -47,17 +55,38 @@ $.getJSON(filename, function (data){
 
 //This code counts the messages for a specific user
 //NOTE: This gets VERY slow if you enable the console.logs
-function getCount(messages, name) {
+function getCount(messages, name){
     var messageCount = 0;
     //console.log(messageCount);
     for(var i = 0; i < messages.length; i++){
         //console.log("Trying to count");
-        if(messages[i].sender_name == name) {
+        if(messages[i].sender_name == name){
             messageCount++;
             //console.log("I'm counting!");
         }
     }
     return messageCount;
+}
+
+//This code finds the members in the chat and participants list (participants list alone may not have everyone)
+function getMembers(messages, participants){
+    var members = [];
+    var name = "";
+    for(var i = 0; i < messages.length; i++){
+        name = messages[i].sender_name;
+        if(!members.includes(name)){
+            members.push(name);
+        }
+    }
+    for(person in participants){
+        if(!members.includes(participants[person])){
+            members.push(participants[person]);
+        }
+    }
+    if(members.includes("Facebook User")){
+        $('#error').append('<p>NOTE: "Facebook User" may be include the data of several people </p>');
+    }
+    return members;
 }
 
 //Modified version of:
