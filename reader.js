@@ -3,8 +3,7 @@
 //This file reads the json data and processes it
 
 //Change this variable to use a different file
-var filename = "mini.json";
-
+var filename = "nodata.json";
 //load the json data
 $.getJSON(filename, function (data) {
     //output the json data into the console
@@ -15,9 +14,9 @@ $.getJSON(filename, function (data) {
     var title = "<h2>" + data.title + "</h2>";
     var output = "";
     var count = 0;
-    //Get names
-    //output += "<th onclick='sortTable(0);'>Name</th>";
-    //output += "<th onclick='sortTable(1);'>Number of Messages</th>";
+
+    output += "<tr><th onclick='sortTable(0);'>Name</th>";
+    output += "<th onclick='sortTable(1);'>Number of Messages</th></tr>";
     for (person in data.participants){
         output += "<tr>";
         name = data.participants[person];
@@ -27,8 +26,23 @@ $.getJSON(filename, function (data) {
         count++;
     }
     output += "</table>";
+
+    //Add the title of the chat
     $('#name').append(title);
-    $('#outputTable').append(output);
+
+    //Check to see if there actually is anything to output
+    if(count != 0){
+        //If there are messages then add them
+        $('#outputTable').append(output);
+    }
+    else{
+        //count == 0 so no messages
+        $('#error').append("<p>No messages found :c</p>");
+    }
+
+//If this fails then this code runs
+}).fail(function(d) {
+    $('#error').append("<p>Couldn't find the file :c</p>");
 });
 
 function getCount(data, name) {
