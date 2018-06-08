@@ -14,16 +14,17 @@ $.getJSON(filename, function (data) {
 
     var title = "<h2>" + data.title + "</h2>";
     var output = "";
+    var count = 0;
     //Get names
     //output += "<th onclick='sortTable(0);'>Name</th>";
     //output += "<th onclick='sortTable(1);'>Number of Messages</th>";
     for (person in data.participants){
         output += "<tr>";
         name = data.participants[person];
-        output += "<td>" + name + "</td>";
-        
-        output += "<td>" + "15" + "</td>";
+        output += "<td class='name'>" + name + "</td>";
+        output += "<td>" + count + "</td>";
         output += "</tr>";
+        count++;
     }
     output += "</table>";
     $('#name').append(title);
@@ -66,18 +67,18 @@ function sortTable(n){
             y = rows[i + 1].getElementsByTagName("td")[n];
 
             //Check if the cell contains a date or not
-            if(x.hasAttribute("month")){
-                //console.log("true");
-                isDate = true;
+            if($(x).hasClass("name")){
+                console.log("true");
+                isName = true;
             }
             else{
-                //console.log("false");
-                isDate = false;
+                console.log("false");
+                isName = false;
             }
 
             //Check if the two rows should switch place, based on the direction, asc or desc:
             //Also check if the row is numbers or not and sort accordingly
-            if(dir == "asc" && !isDate){
+            if(dir == "asc" && !isName){
                 if(parseInt(x.innerHTML, 10) > parseInt(y.innerHTML, 10)){
                     //If so, mark as a switch and break the loop:
                     shouldSwitch = true;
@@ -85,23 +86,23 @@ function sortTable(n){
                     break;
                 }
             }
-            else if(dir == "desc" && !isDate){
+            else if(dir == "desc" && !isName){
                 if(parseInt(x.innerHTML, 10) < parseInt(y.innerHTML, 10)){
                     shouldSwitch = true;
                     //console.log("Case 2");
                     break;
                 }
             }
-            else if(dir == "asc" && isDate){
-                if(parseInt(x.getAttribute("month"), 10) > parseInt(y.getAttribute("month"), 10)){
+            else if(dir == "asc" && isName){
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
                     shouldSwitch = true;
                     //console.log(x.getAttribute("month") + " " + y.getAttribute("month"));
                     //console.log("Case 3");
                     break;
                 }
             }
-            else if(dir == "desc" && isDate){
-                if(parseInt(x.getAttribute("month"), 10) < parseInt(y.getAttribute("month"), 10)){
+            else if(dir == "desc" && isName){
+                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
                     shouldSwitch = true;
                     //console.log(x.getAttribute("month") + " " + y.getAttribute("month"));
                     //console.log("Case 4");

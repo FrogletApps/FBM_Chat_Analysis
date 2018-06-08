@@ -1,2 +1,3 @@
 #Never upload json files!
+#These contain the data from Facebook Messenger and it could be kinda personal...
 *.json
