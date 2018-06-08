@@ -1,3 +1,6 @@
 #Never upload json files!
 #These contain the data from Facebook Messenger and it could be kinda personal...
 *.json
+
+#testdata.json is an mockup of what the data could look like, so is ok
+!testdata.json

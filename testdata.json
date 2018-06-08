@@ -1,0 +1,42 @@
+{
+  "messages": [
+    {
+      "sender_name": "Number Two",
+      "timestamp": 1527277460,
+      "content": "ARGH.",
+      "type": "Generic"
+    },
+    {
+      "sender_name": "Number One",
+      "timestamp": 1527277460,
+      "content": "Hi there this is a test message.",
+      "type": "Generic"
+    },
+    {
+      "sender_name": "Number Two",
+      "timestamp": 1527277450,
+      "content": "Hi there you!!",
+      "reactions": [
+        {
+          "reaction": "\u00f0\u009f\u0091\u008d",
+          "actor": "Number One"
+        },
+        {
+          "reaction": "\u00f0\u009f\u0091\u008d",
+          "actor": "Number Three"
+        }
+      ]
+    }
+  ],
+  "title": "Test Data",
+  "is_still_participant": true,
+  "status": "Pending",
+  "thread_type": "Regular",
+  "participants": [
+    "Number One",
+    "Number Two",
+    "Number Three",
+    "Number Four"
+  ],
+  "thread_path": "testdata_3959395"
+}

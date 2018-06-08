@@ -3,7 +3,7 @@
 //This file reads json data from Facebook Messenger
 
 //Change this variable to use a different file
-var filename = "mini.json";
+var filename = "testdata.json";
 //load the json data
 $.getJSON(filename, function (data){
     //output the json data into the console
@@ -21,7 +21,7 @@ $.getJSON(filename, function (data){
         output += "<tr>";
         name = data.participants[person];
         output += "<td class='name'>" + name + "</td>";
-        output += "<td>" + getCount(data, name) + "</td>";
+        output += "<td>" + getCount(data.messages, name) + "</td>";
         output += "</tr>";
         count++;
     }
@@ -40,19 +40,24 @@ $.getJSON(filename, function (data){
         $('#error').append("<p>No messages found :c</p>");
     }
 
-//If this fails then this code runs
+//If reading the JSON fails then this code runs
 }).fail(function(d) {
     $('#error').append("<p>Couldn't find the file :c</p>");
 });
 
-function getCount(data, name) {
-    var count = 0;
-    for(var i = 0; i < data.length; i++){
-        if(data[i].sender_name == name) {
-            count++;
+//This code counts the messages for a specific user
+//NOTE: This gets VERY slow if you enable the console.logs
+function getCount(messages, name) {
+    var messageCount = 0;
+    //console.log(messageCount);
+    for(var i = 0; i < messages.length; i++){
+        //console.log("Trying to count");
+        if(messages[i].sender_name == name) {
+            messageCount++;
+            //console.log("I'm counting!");
         }
     }
-    return count;
+    return messageCount;
 }
 
 //Modified version of:
