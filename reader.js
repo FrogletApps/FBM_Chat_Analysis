@@ -1,58 +1,81 @@
-//Created by James Pearson 26/05/18, last updated 08/06/18
+//Created by James Pearson 26/05/18, last updated 10/06/18
 
 //This file reads json data from Facebook Messenger
 
-//Change this variable to use a different file
-var filename = "testdata.json";
-//load the json data
-$.getJSON(filename, function (data){
-    //output the json data into the console
-    //$.each(data, function (index, value) {
-    //   console.log(value);
-    //});
+//http://blog.teamtreehouse.com/reading-files-using-the-html5-filereader-api
+window.onload = function() {
+    var fileInput = document.getElementById('fileInput');
 
-    var title = "<h2>" + data.title + "</h2>";
-    var output = "";
-    var count = 0;
-    var members = getMembers(data.messages, data.participants);
+    fileInput.addEventListener('change', function(e) {
+        var file = fileInput.files[0];
+        var textType = ".json";
 
-    output += "<tr><th onclick='sortTable(0);'>Name</th>";
-    output += "<th onclick='sortTable(1);'>Number of Messages</th></tr>";
-    for(person in members){
-        output += "<tr>";
-        name = members[person];
-        //Flag Facebook User as different to everyone else
-        if(name == "Facebook User"){
-            output += "<td id='FBU' class='name'>" + name + "</td>";
-            output += "<td id='FBU'>" + getCount(data.messages, name) + "</td>";
+        if (file.type.match(textType)) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                load(reader.result);
+            }
+            reader.readAsText(file);	
+        } else {
+            alert("File not supported!");
+        }
+    });
+}
+
+function load(jsonString){
+    $('#name').empty();
+    $('#outputTable').empty();
+    $('#error').empty();
+    $('#instructions').empty();
+
+    //parse the json data
+    var data = JSON.parse(jsonString);
+    if(data.hasOwnProperty('messages')){
+        var output = "";
+        var count = 0;
+        var members = getMembers(data.messages, data.participants);
+    
+        var instructions = "<br>";
+        instructions += "<p>Click a table header to sort the table in ascending order by that category</p>";
+        instructions += "<p>Tap again to sort by descending order</p>";
+    
+        output += "<tr><th onclick='sortTable(0);'>Name</th>";
+        output += "<th onclick='sortTable(1);'>Number of Messages</th></tr>";
+        for(person in members){
+            output += "<tr>";
+            name = members[person];
+            //Flag Facebook User as different to everyone else
+            if(name == "Facebook User"){
+                output += "<td id='FBU' class='name'>" + name + "</td>";
+                output += "<td id='FBU'>" + getCount(data.messages, name) + "</td>";
+            }
+            else{
+                output += "<td class='name'>" + name + "</td>";
+                output += "<td>" + getCount(data.messages, name) + "</td>";
+            }
+            output += "</tr>";
+            count++;
+        }
+    
+        //Add the title of the chat
+        $('#name').append(getTitle(data.title, members));
+    
+        //Check to see if there actually is anything to output
+        if(count != 0){
+            $('#instructions').append(instructions);
+            //If there are messages then add them
+            $('#outputTable').append(output);
         }
         else{
-            output += "<td class='name'>" + name + "</td>";
-            output += "<td>" + getCount(data.messages, name) + "</td>";
+            //count == 0 so no messages
+            $('#instructions').empty();
+            $('#error').append("<p>No messages found :c</p>");
         }
-        output += "</tr>";
-        count++;
-    }
-
-    //Add the title of the chat
-    $('#name').append(getTitle(data.title, members));
-
-    //Check to see if there actually is anything to output
-    if(count != 0){
-        //If there are messages then add them
-        $('#outputTable').append(output);
     }
     else{
-        //count == 0 so no messages
-        $('#instructions').empty();
-        $('#error').append("<p>No messages found :c</p>");
+        alert("This doesn't appear to be a Facebook Messenger JSON file");
     }
-
-//If reading the JSON fails then this code runs
-}).fail(function(d) {
-    $('#instructions').empty();
-    $('#error').append("<p>Couldn't find the file :c</p>");
-});
+}
 
 //This code counts the messages for a specific user
 //NOTE: This gets VERY slow if you enable the console.logs
@@ -110,7 +133,6 @@ function getTitle(title, members){
 //Modified version of:
 //https://www.w3schools.com/howto/howto_js_sort_table.asp
 function sortTable(n){
-    
     //Setup variables
     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0, isNum;
     table = document.getElementById("outputTable");

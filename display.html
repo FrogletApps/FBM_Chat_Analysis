@@ -12,23 +12,17 @@
 	<body>
 		<div id="topbar">
 			<h1>Facebook Messenger Chat Analysis</h1>
-        </div>
-		<div id="instructions">
-			<br>
-			<p>Click a table header to sort the table in ascending order by that category</p>
-			<p>Tap again to sort by descending order</p>
 		</div>
+		<p>Select the Facebook Messenger JSON file you want to view</p>
+		<div id="filePicker">
+			<input type="file" id="fileInput" accept=".json">
+		</div>
+		<div id="instructions"></div>
 		<br>
-
-        <div id="name">
-		</div>
-
-		<table id="outputTable">
-		</table>
+        <div id="name"></div>
+		<table id="outputTable"></table>
 		<br>
-
-		<div id="error">
-		</div>
+		<div id="error"></div>
 		<br>
 
 		<script src="reader.js"></script>
