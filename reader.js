@@ -4,62 +4,58 @@
 
 //Change this variable to use a different file
 var filename = "json/testdata.json";
-//load the json data
-$.getJSON(filename, function(data){
-    //output the json data into the console
-    //$.each(data, function (index, value) {
-    //   console.log(value);
-    //});
+load(filename);
 
-    var output = "";
-    var count = 0;
-    var members = getMembers(data.messages, data.participants);
+function load(filename){
+    //load the json data
+    $.getJSON(filename, function(data){
+        //output the json data into the console
+        //$.each(data, function (index, value) {
+        //   console.log(value);
+        //});
 
-    output += "<tr><th onclick='sortTable(0);'>Name</th>";
-    output += "<th onclick='sortTable(1);'>Number of Messages</th></tr>";
-    for(person in members){
-        output += "<tr>";
-        name = members[person];
-        //Flag Facebook User as different to everyone else
-        if(name == "Facebook User"){
-            output += "<td id='FBU' class='name'>" + name + "</td>";
-            output += "<td id='FBU'>" + getCount(data.messages, name) + "</td>";
+        var output = "";
+        var count = 0;
+        var members = getMembers(data.messages, data.participants);
+
+        output += "<tr><th onclick='sortTable(0);'>Name</th>";
+        output += "<th onclick='sortTable(1);'>Number of Messages</th></tr>";
+        for(person in members){
+            output += "<tr>";
+            name = members[person];
+            //Flag Facebook User as different to everyone else
+            if(name == "Facebook User"){
+                output += "<td id='FBU' class='name'>" + name + "</td>";
+                output += "<td id='FBU'>" + getCount(data.messages, name) + "</td>";
+            }
+            else{
+                output += "<td class='name'>" + name + "</td>";
+                output += "<td>" + getCount(data.messages, name) + "</td>";
+            }
+            output += "</tr>";
+            count++;
+        }
+
+        //Add the title of the chat
+        $('#name').append(getTitle(data.title, members));
+
+        //Check to see if there actually is anything to output
+        if(count != 0){
+            //If there are messages then add them
+            $('#outputTable').append(output);
         }
         else{
-            output += "<td class='name'>" + name + "</td>";
-            output += "<td>" + getCount(data.messages, name) + "</td>";
+            //count == 0 so no messages
+            $('#instructions').empty();
+            $('#error').append("<p>No messages found :c</p>");
         }
-        output += "</tr>";
-        count++;
-    }
 
-    //Add the title of the chat
-    $('#name').append(getTitle(data.title, members));
-
-    //Check to see if there actually is anything to output
-    if(count != 0){
-        //If there are messages then add them
-        $('#outputTable').append(output);
-    }
-    else{
-        //count == 0 so no messages
+    //If reading the JSON fails then this code runs
+    }).fail(function(d) {
         $('#instructions').empty();
-        $('#error').append("<p>No messages found :c</p>");
-    }
-
-//If reading the JSON fails then this code runs
-}).fail(function(d) {
-    $('#instructions').empty();
-    $('#error').append("<p>Couldn't find the file :c</p>");
-});
-
-$(document).ready(function(){
-    console.log("bleep");
-    $.get(".", function(data){
-        $("#fileNames").append(data);
-        console.log("bleep");
+        $('#error').append("<p>Couldn't find the file :c</p>");
     });
-})
+}
 
 //This code counts the messages for a specific user
 //NOTE: This gets VERY slow if you enable the console.logs
@@ -117,7 +113,6 @@ function getTitle(title, members){
 //Modified version of:
 //https://www.w3schools.com/howto/howto_js_sort_table.asp
 function sortTable(n){
-    
     //Setup variables
     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0, isNum;
     table = document.getElementById("outputTable");
