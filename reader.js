@@ -2,6 +2,8 @@
 
 //This file reads json data from Facebook Messenger
 
+//This part gets a JSON file from the file picker thingy
+//Based on code from:
 //http://blog.teamtreehouse.com/reading-files-using-the-html5-filereader-api
 window.onload = function(){
     var fileInput = document.getElementById('fileInput');
@@ -16,16 +18,14 @@ window.onload = function(){
                 parse(reader.result);
             }
             reader.readAsText(file);	
-        }else{
+        }
+        else{
             alert("File not supported!");
         }
     });
 }
 
-function run(parsedJSON){
-    count(parsedJSON);
-}
-
+//Parse the data
 function parse(jsonString){
     $('#name').empty();
     var parsedData = JSON.parse(jsonString);
@@ -40,7 +40,12 @@ function parse(jsonString){
     }
 }
 
-//Parse the JSON data and count the number of messages
+//Put the functions you want to run with parsed JSON data here
+function run(parsedJSON){
+    count(parsedJSON);
+}
+
+//Count the number of messages
 function count(parsedData){
     $('#outputTable').empty();
     $('#error').empty();
@@ -56,6 +61,7 @@ function count(parsedData){
 
     output += "<tr><th onclick='sortTable(0);'>Name</th>";
     output += "<th onclick='sortTable(1);'>Number of Messages</th></tr>";
+
     for(person in members){
         output += "<tr>";
         name = members[person];
@@ -85,30 +91,29 @@ function count(parsedData){
 }
 
 //This code counts the messages for a specific user
-//NOTE: This gets VERY slow if you enable the console.logs
 function getCount(messages, name){
     var messageCount = 0;
-    //console.log(messageCount);
     for(var i = 0; i < messages.length; i++){
-        //console.log("Trying to count");
         if(messages[i].sender_name == name){
             messageCount++;
-            //console.log("I'm counting!");
         }
     }
     return messageCount;
 }
 
-//This code finds the members in the chat and participants list (participants list alone may not have everyone)
+//This code finds the members in the chat and participants list
+//(participants list alone may not have everyone)
 function getMembers(messages, participants){
     var members = [];
     var name = "";
+    //Check through all the messages to find people in the group
     for(var i = 0; i < messages.length; i++){
         name = messages[i].sender_name;
         if(!members.includes(name)){
             members.push(name);
         }
     }
+    //Looks at the participants list for people who might not have sent any messages
     for(person in participants){
         if(!members.includes(participants[person])){
             members.push(participants[person]);
@@ -120,6 +125,8 @@ function getMembers(messages, participants){
     return members;
 }
 
+//Find a title for the data
+//Eg if only 2 people then x&y or if more then it's a group chat
 function getTitle(title, members){
     var newTitle = "";
     if(members.length > 2){
