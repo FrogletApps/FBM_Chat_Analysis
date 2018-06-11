@@ -41,8 +41,9 @@ function parse(jsonString){
 }
 
 //Put the functions you want to run with parsed JSON data here
-function run(parsedJSON){
-    count(parsedJSON);
+function run(parsedData){
+    count(parsedData);
+    date(parsedData);
 }
 
 //Count the number of messages
@@ -88,6 +89,63 @@ function count(parsedData){
         $('#instructions').empty();
         $('#error').append("<p>No messages found :c</p>");
     }
+}
+
+function date(parsedData){
+    //Empty all fields
+    $('#firstMessageDate').empty();
+
+    var messages = parsedData.messages;
+    var timestampArray = [];
+    for(i=0; i<messages.length; i++){
+        var timestamp = messages[i].timestamp;
+        //console.log(timestamp);
+        //Multiplied by 1000 so that the argument is in milliseconds, not seconds.
+        timestampArray.push(timestamp*1000);
+    }
+    //console.log(timestampArray);
+    var length = timestampArray.length;
+    var first = timestampArray[length-1];
+
+    //Put data into fields
+    $('#firstMessageDate').append("<p>The first message was sent on " + prettyDate(first) + "</p>");
+}
+
+//Generate a human readable date from a timestamp
+function prettyDate(timestamp){
+    var date = new Date(timestamp);
+    var day = date.getDay();
+    var d = startZero(date.getDate());
+    var m = startZero(date.getMonth()+1); 	//January was 0 but is now 1
+    var yyyy = date.getFullYear();
+    var h = startZero(date.getHours());
+    var min = startZero(date.getMinutes());
+    var s = startZero(date.getSeconds());
+
+    //puts days of the week into an array so you print name not number
+    var dayName = [];
+    dayName[0]=  "Sunday";
+    dayName[1] = "Monday";
+    dayName[2] = "Tuesday";
+    dayName[3] = "Wednesday";
+    dayName[4] = "Thursday";
+    dayName[5] = "Friday";
+    dayName[6] = "Saturday";
+
+    var prettyDate = d+"/"+m+"/"+yyyy+" ("+dayName[day]+") at "+h+":"+min+":"+s+" (UTC)";
+    return prettyDate;
+}
+
+//Add zeros onto the start of a number if it's less than 10
+function startZero(number){
+    var paddedNumber = "";
+    if (number < 10){
+        paddedNumber = "0" + number;
+    }
+    else{
+        paddedNumber = number
+    }
+    return paddedNumber;
 }
 
 //This code counts the messages for a specific user
