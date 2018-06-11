@@ -42,8 +42,9 @@ function parse(jsonString){
 
 //Put the functions you want to run with parsed JSON data here
 function run(parsedData){
-    count(parsedData);
     date(parsedData);
+    firstMessage(parsedData);
+    count(parsedData); //run this last as it clears fields if there are no messages
 }
 
 //Count the number of messages
@@ -87,33 +88,48 @@ function count(parsedData){
     else{
         //count == 0 so no messages
         $('#instructions').empty();
+        $('#firstMessage').empty();
+        $('#firstMessageDate').empty();
         $('#error').append("<p>No messages found :c</p>");
     }
 }
 
-function date(parsedData){
-    //Empty all fields
-    $('#firstMessageDate').empty();
+//Find data about the first message
+function firstMessage(parsedData){
+    //Empty first message field
+    $('#firstMessage').empty();
 
+    var messages = parsedData.messages;
+
+    //First message position
+    var firstMessage = messages.length-1;
+    //Time
+    var firstTimestamp = messages[firstMessage].timestamp;
+    //Sender
+    var firstSender = messages[firstMessage].sender_name;
+    //Content
+    var firstMessageContent = messages[firstMessage].content;
+
+    //Put data into fields
+    $('#firstMessage').append('<p>The first message was "' + firstMessageContent + '" by ' + firstSender + 
+    ".  It was sent on " + prettyDate(firstTimestamp) + "</p>");
+}
+
+//Arranges all the timestamps into an array
+function date(parsedData){
     var messages = parsedData.messages;
     var timestampArray = [];
     for(i=0; i<messages.length; i++){
         var timestamp = messages[i].timestamp;
         //console.log(timestamp);
-        //Multiplied by 1000 so that the argument is in milliseconds, not seconds.
-        timestampArray.push(timestamp*1000);
+        timestampArray.push(timestamp);
     }
-    //console.log(timestampArray);
-    var length = timestampArray.length;
-    var first = timestampArray[length-1];
-
-    //Put data into fields
-    $('#firstMessageDate').append("<p>The first message was sent on " + prettyDate(first) + "</p>");
 }
 
 //Generate a human readable date from a timestamp
 function prettyDate(timestamp){
-    var date = new Date(timestamp);
+    //Multiplied by 1000 so that the argument is in milliseconds, not seconds.
+    var date = new Date(timestamp*1000);
     var day = date.getDay();
     var d = startZero(date.getDate());
     var m = startZero(date.getMonth()+1); 	//January was 0 but is now 1
