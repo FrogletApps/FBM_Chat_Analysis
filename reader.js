@@ -210,7 +210,7 @@ function getTitle(title, members){
         newTitle = members[0] + " & " + members[1];
     }
     else if(members.length == 1){
-        newTitle = members[0] + "on their own...";
+        newTitle = members[0] + " on their own";
     }
     else{
         newTitle =  "???";
