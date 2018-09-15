@@ -1,27 +1,12 @@
-table, th, td {
-    border-collapse: collapse;
-    border: 1px solid #969696;
-    padding: 5px;
-    text-align: center;
-    /*Centralise*/
-    margin-left: auto;
-    margin-right: auto;
-}
-
-th {
-    background: #BBB;
-    cursor: pointer;
-}
-
-tr:hover {
-    background: #EEE;
-}
-
 table {
     width: 90%;
     padding-left: 5%;
     padding-right: 5%;
     text-align: middle;
+}
+
+th {
+    cursor: pointer;
 }
 
 #filePicker{
