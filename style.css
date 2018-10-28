@@ -10,9 +10,8 @@ th {
 }
 
 #filePicker{
-    font-family: "Segoe UI", Roboto, Ubuntu, sans-serif;
+    /*Fix to make the file picker properly centralised*/
     text-align: center;
-    /*For some reason this isn't properly centred, but this fixes it*/
     margin-left: 5%;
 }
 
