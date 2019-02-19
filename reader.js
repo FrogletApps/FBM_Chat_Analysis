@@ -1,4 +1,4 @@
-//Created by James Pearson 26/05/18, last updated 10/06/18
+//Created by James Pearson 26/05/18, last updated 19/02/19
 
 //This file reads json data from Facebook Messenger
 
@@ -31,7 +31,7 @@ function parse(jsonString){
     var parsedData = JSON.parse(jsonString);
     if(parsedData.hasOwnProperty('messages')){
         //Add the title of the chat
-        var members = getMembers(parsedData.messages, parsedData.participants);
+        var members = getParticipants(parsedData);
         $('#name').append(getTitle(parsedData.title, members));
         run(parsedData);
     }
@@ -55,7 +55,7 @@ function count(parsedData){
 
     var output = "";
     var count = 0;
-    var members = getMembers(parsedData.messages, parsedData.participants);
+    var participantsArray = getParticipants(parsedData);
 
     var instructions = "<br>";
     instructions += "<p>Click a table header to sort the table in ascending order by that category</p>";
@@ -64,9 +64,9 @@ function count(parsedData){
     output += "<tr><th onclick='sortTable(0);'>Name</th>";
     output += "<th onclick='sortTable(1);'>Number of Messages</th></tr>";
 
-    for(person in members){
+    for(person in participantsArray){
         output += "<tr>";
-        name = members[person];
+        name = participantsArray[person];
         //Flag Facebook User as different to everyone else
         if(name == "Facebook User"){
             output += "<td id='FBU' class='name'>" + name + "</td>";
@@ -104,7 +104,7 @@ function firstMessage(parsedData){
     //First message position
     var firstMessage = messages.length-1;
     //Time
-    var firstTimestamp = messages[firstMessage].timestamp;
+    var firstTimestamp = messages[firstMessage].timestamp_ms;
     //Sender
     var firstSender = messages[firstMessage].sender_name;
     //Content
@@ -115,12 +115,26 @@ function firstMessage(parsedData){
     ".  It was sent on " + prettyDate(firstTimestamp) + "</p>");
 }
 
+//Gets all the participants in the chat
+function getParticipants(parsedData){
+    var participants = parsedData.participants;
+    var participantArray = [];
+    for(i=0; i<participants.length; i++){
+        var participant = participants[i].name;
+        participantArray.push(participant);
+    }
+    if(participantArray.includes("Facebook User")){
+        $('#error').append('<p>Note: "Facebook User" may include several people\'s data</p>');
+    }
+    return participantArray;
+}
+
 //Arranges all the timestamps into an array
 function date(parsedData){
     var messages = parsedData.messages;
     var timestampArray = [];
     for(i=0; i<messages.length; i++){
-        var timestamp = messages[i].timestamp;
+        var timestamp = messages[i].timestamp_ms;
         //console.log(timestamp);
         timestampArray.push(timestamp);
     }
@@ -128,8 +142,7 @@ function date(parsedData){
 
 //Generate a human readable date from a timestamp
 function prettyDate(timestamp){
-    //Multiplied by 1000 so that the argument is in milliseconds, not seconds.
-    var date = new Date(timestamp*1000);
+    var date = new Date(timestamp);
     var day = date.getDay();
     var d = startZero(date.getDate());
     var m = startZero(date.getMonth()+1); 	//January was 0 but is now 1
@@ -173,30 +186,6 @@ function getCount(messages, name){
         }
     }
     return messageCount;
-}
-
-//This code finds the members in the chat and participants list
-//(participants list alone may not have everyone)
-function getMembers(messages, participants){
-    var members = [];
-    var name = "";
-    //Check through all the messages to find people in the group
-    for(var i = 0; i < messages.length; i++){
-        name = messages[i].sender_name;
-        if(!members.includes(name)){
-            members.push(name);
-        }
-    }
-    //Looks at the participants list for people who might not have sent any messages
-    for(person in participants){
-        if(!members.includes(participants[person])){
-            members.push(participants[person]);
-        }
-    }
-    if(members.includes("Facebook User")){
-        $('#error').append('<p>Note: "Facebook User" may include several people\'s data</p>');
-    }
-    return members;
 }
 
 //Find a title for the data
