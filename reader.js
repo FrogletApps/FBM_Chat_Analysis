@@ -61,20 +61,28 @@ function count(parsedData){
     instructions += "<p>Click a table header to sort the table in ascending order by that category</p>";
     instructions += "<p>Tap again to sort by descending order</p>";
 
-    output += "<tr><th onclick='sortTable(0);'>Name</th>";
-    output += "<th onclick='sortTable(1);'>Number of Messages</th></tr>";
+    output += "<tr>";
+    output += "<th onclick='sortTable(0);'>Name</th>";
+    output += "<th onclick='sortTable(1);'>Number of Messages</th>";
+    output += "<th onclick='sortTable(2);'>Number of Reactions</th>";
+    output += "</tr>";
 
     for(person in participantsArray){
         output += "<tr>";
         name = participantsArray[person];
+        messageCount = getMessageCount(parsedData.messages, name);
+        reactionCount = getReactionCount(parsedData.messages, name);
+
         //Flag Facebook User as different to everyone else
         if(name == "Facebook User"){
             output += "<td id='FBU' class='name'>" + name + "</td>";
-            output += "<td id='FBU'>" + getCount(parsedData.messages, name) + "</td>";
+            output += "<td id='FBU'>" + messageCount + "</td>";
+            output += "<td id='FBU'>" + reactionCount + "</td>";
         }
         else{
             output += "<td class='name'>" + name + "</td>";
-            output += "<td>" + getCount(parsedData.messages, name) + "</td>";
+            output += "<td>" + messageCount + "</td>";
+            output += "<td>" + reactionCount + "</td>";
         }
         output += "</tr>";
         count++;
@@ -178,7 +186,7 @@ function startZero(number){
 }
 
 //This code counts the messages for a specific user
-function getCount(messages, name){
+function getMessageCount(messages, name){
     var messageCount = 0;
     for(var i = 0; i < messages.length; i++){
         if(messages[i].sender_name == name){
@@ -187,6 +195,22 @@ function getCount(messages, name){
     }
     return messageCount;
 }
+
+function getReactionCount(messages, name){
+    var reactionCount = 0;
+    for(var i = 0; i < messages.length; i++){
+        if (messages[i].reactions){
+            var reactions = messages[i].reactions
+            for(var j = 0; j < reactions.length; j++){
+                if (reactions[j].actor == name){
+                    reactionCount++;
+                }
+            }
+        }
+    }
+    return reactionCount;
+}
+
 
 //Find a title for the data
 //Eg if only 2 people then x&y or if more then it's a group chat
