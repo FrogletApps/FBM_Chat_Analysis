@@ -64,7 +64,9 @@ function count(parsedData){
     output += "<tr>";
     output += "<th onclick='sortTable(0);'>Name</th>";
     output += "<th onclick='sortTable(1);'>Number of Messages</th>";
-    output += "<th onclick='sortTable(2);'>Number of Reactions</th>";
+    output += "<th onclick='sortTable(2);'>Number of Reactions Sent</th>";
+    output += "<th onclick='sortTable(3);'>Number of Reactions Recieved</th>";
+    output += "<th onclick='sortTable(4);'>Average Reactions per Message</th>";
     output += "</tr>";
 
     for(person in participantsArray){
@@ -72,17 +74,26 @@ function count(parsedData){
         name = participantsArray[person];
         messageCount = getMessageCount(parsedData.messages, name);
         reactionCount = getReactionCount(parsedData.messages, name);
+        reactionRecievedCount = getReactionRecievedCount(parsedData.messages, name);
+        reactionPerMessage = (reactionRecievedCount/messageCount).toFixed(2).toString();
+        if (isNaN(reactionPerMessage)){
+            reactionPerMessage = "0.00";
+        }
 
         //Flag Facebook User as different to everyone else
         if(name == "Facebook User"){
             output += "<td id='FBU' class='name'>" + name + "</td>";
             output += "<td id='FBU'>" + messageCount + "</td>";
             output += "<td id='FBU'>" + reactionCount + "</td>";
+            output += "<td id='FBU'>" + reactionRecievedCount + "</td>";
+            output += "<td id='FBU'>" + reactionPerMessage + "</td>";
         }
         else{
             output += "<td class='name'>" + name + "</td>";
             output += "<td>" + messageCount + "</td>";
             output += "<td>" + reactionCount + "</td>";
+            output += "<td>" + reactionRecievedCount + "</td>";
+            output += "<td>" + reactionPerMessage + "</td>";
         }
         output += "</tr>";
         count++;
@@ -196,6 +207,7 @@ function getMessageCount(messages, name){
     return messageCount;
 }
 
+//Get the number of reactions sent by a user
 function getReactionCount(messages, name){
     var reactionCount = 0;
     for(var i = 0; i < messages.length; i++){
@@ -209,6 +221,17 @@ function getReactionCount(messages, name){
         }
     }
     return reactionCount;
+}
+
+//Get the number of reactions sent to a user
+function getReactionRecievedCount(messages, name){
+    var reactionRecievedCount = 0;
+    for(var i = 0; i < messages.length; i++){
+        if (messages[i].sender_name == name && messages[i].reactions){
+            reactionRecievedCount += messages[i].reactions.length
+        }
+    }
+    return reactionRecievedCount;
 }
 
 
