@@ -75,9 +75,9 @@ function count(parsedData){
         messageCount = getMessageCount(parsedData.messages, name);
         reactionCount = getReactionCount(parsedData.messages, name);
         reactionRecievedCount = getReactionRecievedCount(parsedData.messages, name);
-        reactionPerMessage = (reactionRecievedCount/messageCount).toFixed(2).toString();
+        reactionPerMessage = (reactionRecievedCount/messageCount).toFixed(4).toString();
         if (isNaN(reactionPerMessage)){
-            reactionPerMessage = "0.00";
+            reactionPerMessage = "0.0000";
         }
 
         //Flag Facebook User as different to everyone else
